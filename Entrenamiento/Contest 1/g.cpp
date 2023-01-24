@@ -1,3 +1,5 @@
+// Solución con dp
+
 # include <bits/stdc++.h>
 # define ll long long
 # define fore(i, a, b) for(int i=a;i<b;i++)
@@ -45,7 +47,8 @@ int main()
         cin>>n;
         cout << "Case " << z << ": ";
 
-        n = (n+8)%3 + 6;
+        n = (n+8)%3 + 6; //Así compactamos todos los casos
+        //Tambien se puede checar si n%3==0, pero está más chido con dp
 
         vector<vector<vector<int> > > s(3); 
         s[0].resize(100, vector<int>(100, -1));
