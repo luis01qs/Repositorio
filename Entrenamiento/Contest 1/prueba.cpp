@@ -47,6 +47,6 @@ int main()
     cout << endl;
     //cout << "2 " << endl << binary_search_more(0, 9, 2) << endl;
     //fore(i, 0, 57) cout << i << " " << binary_search_less(0, 9, i) << endl;
-    fore(i, 1, 57) cout << i << " " << binary_search(0, 10, i) << endl;
+    fore(i, 1, 57) cout << i << " " << binary_search_more(0, 10, i) << endl;
     return 0;
 }

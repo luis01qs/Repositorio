@@ -11,17 +11,37 @@
 using namespace std;
  
 vector<ll> valores;
- 
-ll binarySearch(int l, int r, ll x)
+
+ll binary_search_more_1(ll a, ll b, ll x)
 {
-    if (r >= l) 
-    {
-        int mid = l + (r - l) / 2;
-        if (valores[mid] == x) return mid;
-        if (valores[mid] > x) return binarySearch(l, mid - 1, x);
-        return binarySearch(mid + 1, r, x);
-    }
-    return -1;
+    if(a == b) return valores[a] >= x ? a : -1;
+    ll k = (b + a) / 2;
+    if( x > valores[k] ) return binary_search_more_1(k+1, b, x);
+    ll ret = binary_search_more_1(a, k, x);
+    return ret == -1 ? k : ret;
+}
+
+ll calculo(ll x)
+{
+    return x*(x+1)/2;
+}
+
+ll binary_search_more_2(ll a, ll b, ll x)
+{
+    if(a == b) return calculo(a) >= x ? a : -1;
+    ll k = (b + a) / 2;
+    if( x > calculo(k) ) return binary_search_more_2(k+1, b, x);
+    ll ret = binary_search_more_2(a, k, x);
+    return ret == -1 ? k : ret;
+}
+
+ll binary_search_less(ll a, ll b, ll x)
+{
+    if(a == b) return calculo(a) <= x ? a : -1;
+    ll k = (b + a) / 2;
+    if(x < calculo(k)) return binary_search_less(a, k, x);
+    ll ret = binary_search_less(k+1, b, x);
+    return ret == -1 ? k : ret;
 }
  
 int main()
@@ -39,49 +59,32 @@ int main()
         cin>>n;
         cout << "Case " << z << ": ";
  
-        auto l = lower_bound(valores.begin(), valores.end(), n);
-        ll s = *l;
-        ll ptr = binarySearch(0, 1442251, s) + 1;
-        if(s == n)cout << ptr*ptr << endl;
+        ll ptr = binary_search_more_1(0, valores.size()-1, n) + 1;
+        
+        if(valores[ptr] == n) cout << ptr*ptr << endl;
         else
         {
-            s = *(l-1);
-            ll dif = n-s;
             ptr--;
+            ll dif = n - valores[ptr-1];
             ll res = ptr*ptr;
             ptr++;
-            cout << ptr << endl;
 
-            if(dif == ptr*(ptr+1)/2) res += ptr;
-            else
-            {
-                if(dif > ptr*(ptr+1)/2)
-                {
-                    dif -= ptr*(ptr+1)/2;
-                    
-                }
-                else
-                {
-
-                }
+            if(dif == calculo(ptr))
+            {   
+                res += ptr;
             }
-
-            /*ll cont = 0;
-            forell(i, 1, ptr+2)
+            else if(dif < calculo(ptr))
             {
-                res++;
-                cont += i;
-                if(cont>=dif) break;
+                res += binary_search_more_2(1, ptr, dif);
             }
- 
- 
-            if(cont < dif)forellm(i, ptr, 0)
+            else 
             {
-                res++;
-                cont += i;
-                if(cont>=dif) break;
-            }*/
-            
+                res += ptr;
+                dif -= calculo(ptr);
+                ptr--;
+                dif = calculo(ptr) - dif;
+                res += ptr - binary_search_less(0, ptr, dif);
+            }
             cout << res << endl;
         }
     }
