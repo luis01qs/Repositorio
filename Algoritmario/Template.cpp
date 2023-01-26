@@ -4,6 +4,7 @@
 # define IOS ios_base::sync_with_stdio(false);cin.tie(NULL);
 # define ii pair<int, int>
 # define pb(x) push_back(x)
+# define mp() make_pair()
 
 using namespace std;
 
