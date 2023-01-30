@@ -10,7 +10,7 @@ using namespace std;
 
 int main()
 {
-    freopen("readme.txt", "r", stdin); //Leer
-    freopen("readme.txt", "w", stdout); //Escribir
+    freopen("prueba.txt", "r", stdin); //Leer
+    freopen("resultados.txt", "w", stdout); //Escribir
     return 0;
 }
