@@ -36,6 +36,8 @@
   "files.associations": {
     "ostream": "cpp",
     "iostream": "cpp",
-    "numeric": "cpp"
+    "numeric": "cpp",
+    "numbers": "cpp",
+    "*.tcc": "cpp"
   }
 }
