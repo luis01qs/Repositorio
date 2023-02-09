@@ -1,3 +1,4 @@
+// Greedy
 # include <bits/stdc++.h>
 # define ll long long
 # define fore(i, a, b) for(int i=a;i<b;i++)
