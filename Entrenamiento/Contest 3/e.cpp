@@ -3,32 +3,9 @@
 
 using namespace std;
 
-int n, m;
-ll p = 0;
-
-ll base_n(ll x, int n)
+void dp()
 {
-    ll k = 0;
-    for(int i=0;x!=0;i++)
-    {
-        k += (x % n) * pow(10, i);
-        x /= n;
-    }
-    return k;
-}
 
-void recorrido(set<ll> &res, int x, int y, ll cont, vector<vector<ll>> &piedras)
-{
-    cont *= piedras[x][y];
-    if(x == n-1 && y == m-1)
-    {
-         res.insert(cont);
-         p++;
-         return;
-    }
-
-    if(x < n-1) recorrido(res, x+1, y, cont, piedras);
-    if(y < m-1) recorrido(res, x, y+1, cont, piedras);
 }
 
 int main()
@@ -38,17 +15,41 @@ int main()
     cin>>tt;
     while(tt--)
     {
+        int n, m;
         cin>>n>>m;
-        vector<vector<ll>> piedras(n, vector<ll>(m));
+
+        vector<vector<pair<int, int>>> numeros(n, vector<pair<int,int>>(m, {0,0}));
+
+        int p;
+        int aux;
+
+        int maximo3 = 0;
         for(int i=0;i<n;i++)
         {
-            for(int j=0;j<m;j++) cin>>piedras[i][j];
+            for(int j=0;j<m;j++)
+            {
+                cin>>p;
+                aux = p;
+                while(aux%2==0)
+                {
+                    numeros[i][j].first++;
+                    aux /= 2;
+                }
+
+                int cont = 0;
+                aux = p;
+                while(aux%3==0)
+                {
+                    numeros[i][j].second++;
+                    aux /= 3;
+                    cont++;
+                }
+
+                maximo3 = max(maximo3, cont);
+            }
         }
 
-        set<ll> res;
-        recorrido(res, 0, 0, 1, piedras);
-        cout << p << endl;
-        //for(auto &e:res) cout << e << endl;
+
     }
     return 0;
 }
