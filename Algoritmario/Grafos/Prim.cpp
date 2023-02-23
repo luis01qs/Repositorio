@@ -1,6 +1,5 @@
 # include <bits/stdc++.h>
 # define mt(a,b,c) make_tuple(a,b,c)
-# define pb(x) push_back(x)
 
 using namespace std;
 
@@ -26,7 +25,7 @@ vector<tuple<int, int, int>> Prim(vector<vector<tuple<int, int, int>>> edges, in
             continue;
         }
 
-        res.pb(mt(get<2>(aux), get<1>(aux), -1*get<0>(aux)));
+        res.push_back(mt(get<2>(aux), get<1>(aux), -1*get<0>(aux)));
         for(auto &e:edges[get<1>(aux)]) posibles.push(mt(-1*get<2>(e), get<1>(e), get<0>(e)));
         nodos[get<1>(aux)] = true;
         tam++;
