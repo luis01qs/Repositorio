@@ -4,30 +4,28 @@ using namespace std;
 
 int main()
 {
+    freopen("prueba.txt", "r", stdin);
     int tt;
     cin>>tt;
     while(tt--)
     {
-        int x;
-        cin>>x;
-        int n;
-        cin>>n;
+        int x, n;
+        cin>>x>>n;
 
-        vector<int> largo(n);
-        for(int i=0;i<n;i++) cin>>largo[i];
+        vector<int> barras(n);
+        for(int i=0;i<n;i++) cin>>barras[i];
 
         bool val = false;
-
-        int suma = 0;
+        int cont;
         for(int i=0;i<(1<<n);i++)
         {
-            suma = 0;
+            cont = 0;
             for(int j=0;j<n;j++)
             {
-                if(i & (1<<j)) suma += largo[j];
+                if((1<<j)&i) cont += barras[j];
             }
 
-            if(suma == x)
+            if(cont == x)
             {
                 val = true;
                 break;
