@@ -29,7 +29,10 @@ struct Solucion
 
     void Imprimir_Matriz()
     {
-        cout << criterio << ":" << endl << "Colisiones: " << colisiones << endl << "Caballo: " << caballo <<  endl;
+        cout << "El criterio global es: " << criterio << endl;
+        cout << "La cantidad de colsiones de reinas es de: " << colisiones << endl;
+        cout << "La cantidad de reinas a distancia de caballo: " << caballo << endl;
+
         vector<vector<char>> matriz(n, vector<char>(n));
         for(int i=0;i<n;i++)
         {
@@ -43,6 +46,8 @@ struct Solucion
             for(int j=0;j<n;j++) cout << matriz[i][j] << " ";
             cout << endl;
         }
+
+        cout << endl;
     }
 
     void Aleatorio()
@@ -83,7 +88,7 @@ struct Solucion
 
     void Calcular_Criterio()
     {
-        criterio = colisiones*c1 - caballo*c2;
+        criterio = colisiones*c1 + caballo*c2;
     }
 
     void Calcular()
@@ -128,8 +133,8 @@ int main()
 
     srand(time(NULL));
 
-    int num_sol_alea = 1; // Cantidad de veces que se empezará con una solución aleatorio nueva
-    int iteraciones = 100; // Cantidad de iteraciones por solución aleatorio nueva
+    int num_sol_alea = 100; // Cantidad de veces que se empezará con una solución aleatorio nueva
+    int iteraciones = 200; // Cantidad de iteraciones por solución aleatorio nueva
     int t = 25; // Número de iteraciones que se vuelve tabú un movimiento
     int ite;
 
@@ -137,8 +142,17 @@ int main()
     mejor.Inicializar();
     mejor.Aleatorio();
     mejor.Calcular();
-    mejor.Imprimir_Matriz();
 
+    Solucion mejor_caballo, mejor_reinas;
+
+    mejor_caballo.Inicializar();
+    mejor_caballo.Aleatorio();
+    mejor_caballo.Calcular();
+
+    mejor_reinas.Inicializar();
+    mejor_reinas.Aleatorio();
+    mejor_reinas.Calcular();
+    
     int a, b, p;
     bool val;
 
@@ -153,7 +167,7 @@ int main()
         ite = iteraciones;
         while(ite--)
         {
-            Imprimir();
+            //Imprimir();
             Bajar_Tabu();
             superior.criterio = INT_MAX;
             for(int i=0;i<n;i++)
@@ -170,10 +184,17 @@ int main()
                 swap(permutacion.camino[a], permutacion.camino[b]);
                 permutacion.cambio = {a,b};
                 permutacion.Calcular();
-                permutacion.criterio += tabu[b][a];
 
-                if(permutacion.criterio < superior.criterio) superior = permutacion;
+                if(permutacion.criterio + tabu[b][a] < superior.criterio) superior = permutacion;
+                if(permutacion.caballo > mejor_caballo.caballo) mejor_caballo = permutacion;
+                if(permutacion.colisiones < mejor_reinas.colisiones) mejor_reinas = permutacion;
                 if(superior.criterio < mejor.criterio) mejor = superior;
+
+                //if(mejor.criterio == 0)
+                //{
+                //    mejor.Imprimir_Matriz();
+                //    return 0;
+                //}
             }
 
             if(superior.criterio != INT_MAX)
@@ -184,10 +205,22 @@ int main()
             }
         }
 
-        cout << mejor.criterio << endl;
     }
 
+    mejor.Calcular();
+    mejor_reinas.Calcular();
+    mejor_caballo.Calcular();
+
+    cout << "El tablero de ajedrez se estableció en " << n << " casillas de ancho y largo." << endl << endl;
+
+    cout << "Solución con mejor criterio global: " << endl;
     mejor.Imprimir_Matriz();
+
+    cout << "Solución con menor cantidad de colsiones de reinas: " << endl;
+    mejor_reinas.Imprimir_Matriz();
+
+    cout << "Solución con más reinas a distancia de caballo: " << endl;
+    mejor_caballo.Imprimir_Matriz();
 
     return 0;
 }
