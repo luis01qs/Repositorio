@@ -3,13 +3,13 @@
 using namespace std;
 
 int c1 = 1; // Peso asignado a las colisiones de las resinas
-int c2 = 1; // Peso asignado a las reinas a distancia de caballo
+int c2 = -1; // Peso asignado a las reinas a distancia de caballo
 
-int n;
-bitset<10005> di, ds;
-vector<vector<int>> tabu;
+int n; // Tamaño del tablero
+bitset<10005> di, ds; // Diagonales
+vector<vector<int>> tabu; // Matriz tabú
 
-struct Solucion
+struct Solucion // Estructura de cada solución
 {
     vector<int> camino;
     pair<int, int> cambio;
@@ -17,7 +17,7 @@ struct Solucion
     int caballo;
     int criterio;
 
-    void Inicializar()
+    void Inicializar() // Inicializar la solución
     {
         camino.resize(n);
         for(int i=0;i<n;i++) camino[i] = i+1;
@@ -27,10 +27,10 @@ struct Solucion
         criterio = 0;
     }
 
-    void Imprimir_Matriz()
+    void Imprimir_Matriz() // Imprime la solción en formato matricial al igual que todos sus parámetros
     {
         cout << "El criterio global es: " << criterio << endl;
-        cout << "La cantidad de colsiones de reinas es de: " << colisiones << endl;
+        cout << "La cantidad de colisiones de reinas es de: " << colisiones << endl;
         cout << "La cantidad de reinas a distancia de caballo: " << caballo << endl;
 
         vector<vector<char>> matriz(n, vector<char>(n));
@@ -43,14 +43,17 @@ struct Solucion
 
         for(int i=0;i<n;i++)
         {
-            for(int j=0;j<n;j++) cout << matriz[i][j] << " ";
+            for(int j=0;j<n;j++)
+            {
+                cout << matriz[i][j] << " ";
+            }
             cout << endl;
         }
 
         cout << endl;
     }
 
-    void Aleatorio()
+    void Aleatorio() // Genera una solución aleatoria
     {
         for(int i=0;i<n;i++)
         {
@@ -86,12 +89,12 @@ struct Solucion
         }
     }
 
-    void Calcular_Criterio()
+    void Calcular_Criterio() // Calcula una combinación de los criterios del caballo y colisiones
     {
         criterio = colisiones*c1 + caballo*c2;
     }
 
-    void Calcular()
+    void Calcular() // LLama a todas las funciones para calcular
     {
         Calcular_Colisiones();
         Calcular_Caballos();
@@ -99,7 +102,7 @@ struct Solucion
     }
 };
 
-void Limpiar_Tabu()
+void Limpiar_Tabu() // Reinicia la matriz tabú
 {
     for(int i=0;i<n;i++)
     {
@@ -107,7 +110,7 @@ void Limpiar_Tabu()
     }
 }
 
-void Bajar_Tabu()
+void Bajar_Tabu() // Disminuye en 1 a todos los movimientos que son tabú
 {
     for(int i=0;i<n;i++)
     {
@@ -115,7 +118,7 @@ void Bajar_Tabu()
     }
 }
 
-void Imprimir()
+void Imprimir() // Imprime la matriz tabú
 {
     for(int i=0;i<n;i++)
     {
@@ -127,23 +130,25 @@ void Imprimir()
 
 int main()
 {
-    freopen("resultado.txt", "w", stdout);
-    cin>>n;
+    srand(time(NULL));
+    unsigned t0 = clock();
+
+    freopen("resultado.txt", "w", stdout); // Imprime el resultado en un txt
+    n = 200;
+    //cin>>n;
     tabu.resize(n, vector<int>(n));
 
-    srand(time(NULL));
-
-    int num_sol_alea = 100; // Cantidad de veces que se empezará con una solución aleatorio nueva
-    int iteraciones = 200; // Cantidad de iteraciones por solución aleatorio nueva
+    int num_sol_alea = 50; // Cantidad de veces que se empezará con una solución aleatorio nueva
+    int iteraciones = 500; // Cantidad de iteraciones por solución aleatorio nueva
     int t = 25; // Número de iteraciones que se vuelve tabú un movimiento
-    int ite;
+    int ite; // Variable auxiliar
 
-    Solucion permutacion, superior, actual, mejor;
+    Solucion permutacion, superior, actual, mejor; // Soluciones auxiliares y final
     mejor.Inicializar();
     mejor.Aleatorio();
     mejor.Calcular();
 
-    Solucion mejor_caballo, mejor_reinas;
+    Solucion mejor_caballo, mejor_reinas; // Soluciones de pareto
 
     mejor_caballo.Inicializar();
     mejor_caballo.Aleatorio();
@@ -158,6 +163,7 @@ int main()
 
     while(num_sol_alea--)
     {
+        // Generamos una solución aleatoria
         superior.Inicializar();
         superior.Aleatorio();
         superior.Calcular();
@@ -167,7 +173,7 @@ int main()
         ite = iteraciones;
         while(ite--)
         {
-            //Imprimir();
+            // Iteramos sobre la solución aleatoria
             Bajar_Tabu();
             superior.criterio = INT_MAX;
             for(int i=0;i<n;i++)
@@ -188,7 +194,7 @@ int main()
                 if(permutacion.criterio + tabu[b][a] < superior.criterio) superior = permutacion;
                 if(permutacion.caballo > mejor_caballo.caballo) mejor_caballo = permutacion;
                 if(permutacion.colisiones < mejor_reinas.colisiones) mejor_reinas = permutacion;
-                if(superior.criterio < mejor.criterio) mejor = superior;
+                if(permutacion.criterio < mejor.criterio) mejor = permutacion;
 
                 //if(mejor.criterio == 0)
                 //{
@@ -216,11 +222,16 @@ int main()
     cout << "Solución con mejor criterio global: " << endl;
     mejor.Imprimir_Matriz();
 
-    cout << "Solución con menor cantidad de colsiones de reinas: " << endl;
+    cout << "Solución con menor cantidad de colisiones de reinas: " << endl;
     mejor_reinas.Imprimir_Matriz();
 
     cout << "Solución con más reinas a distancia de caballo: " << endl;
     mejor_caballo.Imprimir_Matriz();
+
+    cout << endl;
+
+    unsigned t1 = clock();
+    double time = ( double (t1-t0)/CLOCKS_PER_SEC); cout << "Execution Time: " << time << " s" << endl;
 
     return 0;
 }
