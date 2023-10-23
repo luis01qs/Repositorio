@@ -2,6 +2,20 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "java",
+      "name": "Hola",
+      "request": "launch",
+      "mainClass": "Hola",
+      "projectName": "Repositorio_a754f0b1"
+    },
+    {
+      "type": "java",
+      "name": "Simple",
+      "request": "launch",
+      "mainClass": "Simple",
+      "projectName": "Repositorio_a754f0b1"
+    },
+    {
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
       "request": "launch",
